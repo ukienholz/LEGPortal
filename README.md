@@ -1,0 +1,1 @@
+Dieses Repository enthält ein Python SW Projekt, welches ein HTML-zugängliches Portal zur Unterstützung der Gründung und des Betriebs einer LEG (Lokalen Energie Gemeinschaft) in der Schweiz zur Verfügung stellt. 
