@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Was ist eine LEG?{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="mb-4">Was ist eine Lokale Energie Gemeinschaft (LEG)?</h1>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4><i class="bi bi-lightning-charge text-success"></i> Definition</h4>
+                <p>Eine <strong>Lokale Energie Gemeinschaft (LEG)</strong> ist ein Zusammenschluss von Personen,
+                Unternehmen oder Gemeinden, die gemeinsam erneuerbare Energie produzieren, speichern und verbrauchen.
+                In der Schweiz ermöglicht das revidierte Energiegesetz die Bildung solcher Gemeinschaften.</p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4><i class="bi bi-people text-primary"></i> Vorteile</h4>
+                <ul>
+                    <li>Gemeinsame Nutzung lokal erzeugter erneuerbarer Energie</li>
+                    <li>Reduktion der Energiekosten für alle Mitglieder</li>
+                    <li>Stärkung der regionalen Energieunabhängigkeit</li>
+                    <li>Beitrag zum Klimaschutz</li>
+                    <li>Demokratische Mitbestimmung über die lokale Energieversorgung</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4><i class="bi bi-building text-info"></i> Rechtsformen</h4>
+                <p>Für die Gründung einer LEG stehen verschiedene Rechtsformen zur Verfügung:</p>
+
+                <div class="accordion" id="rechtsformenAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGeno">
+                                Genossenschaft (empfohlen)
+                            </button>
+                        </h2>
+                        <div id="collapseGeno" class="accordion-collapse collapse show" data-bs-parent="#rechtsformenAccordion">
+                            <div class="accordion-body">
+                                <strong>Ideal für LEGs.</strong> Demokratische Struktur (1 Person = 1 Stimme),
+                                einfache Aufnahme und Austritt von Mitgliedern, Haftungsbeschränkung.
+                                Mindestens 7 Gründungsmitglieder erforderlich. Eintrag im Handelsregister nötig.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseVerein">
+                                Verein
+                            </button>
+                        </h2>
+                        <div id="collapseVerein" class="accordion-collapse collapse" data-bs-parent="#rechtsformenAccordion">
+                            <div class="accordion-body">
+                                Einfach zu gründen, flexibel. Ideal für gemeinnützige Zwecke.
+                                Mindestens 2 Mitglieder. Kein Handelsregistereintrag bei nicht-kaufmännischem Betrieb nötig.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEG">
+                                Einfache Gesellschaft
+                            </button>
+                        </h2>
+                        <div id="collapseEG" class="accordion-collapse collapse" data-bs-parent="#rechtsformenAccordion">
+                            <div class="accordion-body">
+                                Formlose Gründung möglich, kein Handelsregistereintrag.
+                                Achtung: Alle Mitglieder haften persönlich und solidarisch.
+                                Geeignet für kleine Gruppen mit Vertrauensbasis.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAG">
+                                AG / GmbH
+                            </button>
+                        </h2>
+                        <div id="collapseAG" class="accordion-collapse collapse" data-bs-parent="#rechtsformenAccordion">
+                            <div class="accordion-body">
+                                Eher selten für LEGs. Aufwändiger in der Gründung und Verwaltung.
+                                Kann für grössere, investorengetriebene Projekte sinnvoll sein.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4><i class="bi bi-list-check text-success"></i> Schritte zur Gründung</h4>
+                <ol>
+                    <li><strong>Registrieren</strong> Sie sich auf diesem Portal</li>
+                    <li><strong>LEG erstellen</strong> mit Angabe der gewünschten Rechtsform</li>
+                    <li><strong>Mitglieder einladen</strong> über den Registrierungslink</li>
+                    <li><strong>Gründungsversammlung</strong> durchführen und Statuten verabschieden</li>
+                    <li><strong>Handelsregistereintrag</strong> (falls erforderlich)</li>
+                    <li><strong>Betrieb starten</strong> und gemeinsam Energie produzieren</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="text-center">
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('leg.gründen') }}" class="btn btn-success btn-lg">Jetzt LEG gründen</a>
+            {% else %}
+            <a href="{{ url_for('auth.registrieren') }}" class="btn btn-success btn-lg">Registrieren & loslegen</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

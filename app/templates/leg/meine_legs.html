@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Meine LEGs{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-collection"></i> Meine LEGs</h2>
+
+{% if gegründete %}
+<h4 class="mb-3">Von mir gegründet</h4>
+<div class="row mb-4">
+    {% for leg in gegründete %}
+    <div class="col-md-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ leg.name }}</h5>
+                <p class="text-muted">{{ leg.ort }}, {{ leg.kanton }}</p>
+                <span class="badge bg-{% if leg.status == 'aktiv' %}success{% elif leg.status == 'gegründet' %}primary{% elif leg.status == 'in_gründung' %}warning text-dark{% else %}secondary{% endif %}">
+                    {{ dict(leg.STATUS_OPTIONEN).get(leg.status, leg.status) }}
+                </span>
+                <span class="badge bg-secondary">{{ leg.anzahl_mitglieder() }} Mitglieder</span>
+                {% set ausstehende = leg.mitgliedschaften.filter_by(status='ausstehend').count() %}
+                {% if ausstehende > 0 %}
+                <span class="badge bg-danger">{{ ausstehende }} ausstehende Anträge</span>
+                {% endif %}
+            </div>
+            <div class="card-footer bg-transparent">
+                <a href="{{ url_for('leg.detail', leg_id=leg.id) }}" class="btn btn-outline-primary btn-sm">Details</a>
+                <a href="{{ url_for('leg.bearbeiten', leg_id=leg.id) }}" class="btn btn-outline-secondary btn-sm">Bearbeiten</a>
+                <a href="{{ url_for('members.verwalten', leg_id=leg.id) }}" class="btn btn-outline-info btn-sm">Mitglieder</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if beigetretene %}
+<h4 class="mb-3">Mitgliedschaften</h4>
+<div class="row mb-4">
+    {% for leg in beigetretene %}
+    <div class="col-md-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ leg.name }}</h5>
+                <p class="text-muted">{{ leg.ort }}, {{ leg.kanton }}</p>
+                {% set m = mitgliedschaften.get(leg.id) %}
+                {% if m %}
+                <span class="badge bg-{% if m.status == 'aktiv' %}success{% elif m.status == 'ausstehend' %}warning text-dark{% else %}secondary{% endif %}">
+                    {{ dict(m.STATUS_OPTIONEN).get(m.status, m.status) }}
+                </span>
+                <span class="badge bg-info">{{ dict(m.ROLLEN).get(m.rolle, m.rolle) }}</span>
+                {% endif %}
+            </div>
+            <div class="card-footer bg-transparent">
+                <a href="{{ url_for('leg.detail', leg_id=leg.id) }}" class="btn btn-outline-primary btn-sm">Details</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if not gegründete and not beigetretene %}
+<div class="text-center py-5">
+    <i class="bi bi-collection display-1 text-muted"></i>
+    <h3 class="mt-3 text-muted">Noch keine LEGs</h3>
+    <p class="text-muted">Gründen Sie eine LEG oder treten Sie einer bestehenden bei.</p>
+    <a href="{{ url_for('leg.gründen') }}" class="btn btn-success btn-lg">Jetzt LEG gründen</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Mitglieder - {{ leg.name }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-people"></i> Mitglieder &mdash; {{ leg.name }}</h2>
+    <a href="{{ url_for('leg.detail', leg_id=leg.id) }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Zurück zur LEG
+    </a>
+</div>
+
+{% set ausstehende = mitglieder|selectattr('mitgliedschaft.status', 'equalto', 'ausstehend')|list %}
+{% if ausstehende %}
+<div class="card mb-4">
+    <div class="card-header bg-warning text-dark">
+        <h5 class="mb-0"><i class="bi bi-hourglass-split"></i> Ausstehende Beitrittsanträge ({{ ausstehende|length }})</h5>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>E-Mail</th>
+                    <th>Ort</th>
+                    <th>Anteilscheine</th>
+                    <th>Datum</th>
+                    <th>Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in ausstehende %}
+                <tr>
+                    <td>{{ item.user.vorname }} {{ item.user.nachname }}</td>
+                    <td>{{ item.user.email }}</td>
+                    <td>{% if item.user.ort %}{{ item.user.ort }}{% endif %}</td>
+                    <td>{{ item.mitgliedschaft.anzahl_anteilscheine }}</td>
+                    <td>{{ item.mitgliedschaft.beitrittsdatum.strftime('%d.%m.%Y') }}</td>
+                    <td>
+                        <a href="{{ url_for('members.bestätigen', mitgliedschaft_id=item.mitgliedschaft.id) }}"
+                           class="btn btn-success btn-sm">
+                            <i class="bi bi-check-lg"></i> Bestätigen
+                        </a>
+                        <a href="{{ url_for('members.ablehnen', mitgliedschaft_id=item.mitgliedschaft.id) }}"
+                           class="btn btn-danger btn-sm">
+                            <i class="bi bi-x-lg"></i> Ablehnen
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% set aktive = mitglieder|selectattr('mitgliedschaft.status', 'equalto', 'aktiv')|list %}
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0"><i class="bi bi-people-fill"></i> Aktive Mitglieder ({{ aktive|length }})</h5>
+    </div>
+    <div class="card-body">
+        {% if aktive %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>E-Mail</th>
+                    <th>Ort</th>
+                    <th>Rolle</th>
+                    <th>Anteilscheine</th>
+                    <th>Beitritt</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in aktive %}
+                <tr>
+                    <td>{{ item.user.vorname }} {{ item.user.nachname }}</td>
+                    <td>{{ item.user.email }}</td>
+                    <td>{% if item.user.ort %}{{ item.user.ort }}{% endif %}</td>
+                    <td><span class="badge bg-{% if item.mitgliedschaft.rolle == 'gründer' %}primary{% elif item.mitgliedschaft.rolle == 'vorstand' %}info{% else %}secondary{% endif %}">
+                        {{ dict(item.mitgliedschaft.ROLLEN).get(item.mitgliedschaft.rolle, item.mitgliedschaft.rolle) }}
+                    </span></td>
+                    <td>{{ item.mitgliedschaft.anzahl_anteilscheine }}</td>
+                    <td>{{ item.mitgliedschaft.beitrittsdatum.strftime('%d.%m.%Y') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted mb-0">Noch keine aktiven Mitglieder.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

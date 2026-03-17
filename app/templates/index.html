@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Startseite{% endblock %}
+
+{% block content %}
+<div class="hero rounded-3 mb-4 text-center">
+    <h1><i class="bi bi-lightning-charge-fill"></i> LEG Portal Schweiz</h1>
+    <p class="lead mb-3">Gründen Sie Ihre Lokale Energie Gemeinschaft &mdash; einfach, schnell und unkompliziert.</p>
+    {% if not current_user.is_authenticated %}
+    <a href="{{ url_for('auth.registrieren') }}" class="btn btn-light btn-lg me-2">
+        <i class="bi bi-person-plus"></i> Jetzt registrieren
+    </a>
+    <a href="{{ url_for('main.info') }}" class="btn btn-outline-light btn-lg">
+        <i class="bi bi-info-circle"></i> Mehr erfahren
+    </a>
+    {% else %}
+    <a href="{{ url_for('leg.gründen') }}" class="btn btn-light btn-lg me-2">
+        <i class="bi bi-plus-circle"></i> LEG gründen
+    </a>
+    <a href="{{ url_for('leg.meine_legs') }}" class="btn btn-outline-light btn-lg">
+        <i class="bi bi-collection"></i> Meine LEGs
+    </a>
+    {% endif %}
+</div>
+
+{% if legs_aktiv %}
+<h2 class="mb-3"><i class="bi bi-check-circle text-success"></i> Aktive LEGs</h2>
+<div class="row mb-4">
+    {% for leg in legs_aktiv %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ leg.name }}</h5>
+                <p class="card-text text-muted">{{ leg.ort }}, {{ leg.kanton }}</p>
+                <span class="badge bg-success status-badge">{{ dict(leg.STATUS_OPTIONEN).get(leg.status, leg.status) }}</span>
+                <span class="badge bg-secondary status-badge">{{ dict(leg.RECHTSFORMEN).get(leg.rechtsform, leg.rechtsform) }}</span>
+                <p class="card-text mt-2"><small>{{ leg.anzahl_mitglieder() }} Mitglieder</small></p>
+            </div>
+            <div class="card-footer bg-transparent">
+                <a href="{{ url_for('leg.detail', leg_id=leg.id) }}" class="btn btn-outline-primary btn-sm">Details ansehen</a>
+                {% if leg.registrierung_offen %}
+                <a href="{{ url_for('members.beitreten', leg_id=leg.id) }}" class="btn btn-success btn-sm">Beitreten</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if legs_in_gründung %}
+<h2 class="mb-3"><i class="bi bi-hourglass-split text-warning"></i> LEGs in Gründung</h2>
+<div class="row mb-4">
+    {% for leg in legs_in_gründung %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ leg.name }}</h5>
+                <p class="card-text text-muted">{{ leg.ort }}, {{ leg.kanton }}</p>
+                <span class="badge bg-warning text-dark status-badge">In Gründung</span>
+                <span class="badge bg-secondary status-badge">{{ dict(leg.RECHTSFORMEN).get(leg.rechtsform, leg.rechtsform) }}</span>
+            </div>
+            <div class="card-footer bg-transparent">
+                <a href="{{ url_for('leg.detail', leg_id=leg.id) }}" class="btn btn-outline-primary btn-sm">Details ansehen</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if not legs_aktiv and not legs_in_gründung %}
+<div class="text-center py-5">
+    <i class="bi bi-lightning-charge display-1 text-muted"></i>
+    <h3 class="mt-3 text-muted">Noch keine LEGs vorhanden</h3>
+    <p class="text-muted">Werden Sie der/die Erste und gründen Sie eine Lokale Energie Gemeinschaft!</p>
+    {% if current_user.is_authenticated %}
+    <a href="{{ url_for('leg.gründen') }}" class="btn btn-success btn-lg">Jetzt LEG gründen</a>
+    {% else %}
+    <a href="{{ url_for('auth.registrieren') }}" class="btn btn-success btn-lg">Registrieren & LEG gründen</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
