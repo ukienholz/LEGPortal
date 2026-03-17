@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}{{ leg.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h2>{{ leg.name }}</h2>
+                    <div>
+                        <span class="badge bg-{% if leg.status == 'aktiv' %}success{% elif leg.status == 'gegründet' %}primary{% elif leg.status == 'in_gründung' %}warning text-dark{% else %}secondary{% endif %} status-badge">
+                            {{ status_label }}
+                        </span>
+                    </div>
+                </div>
+
+                {% if leg.beschreibung %}
+                <p class="lead">{{ leg.beschreibung }}</p>
+                {% endif %}
+
+                <table class="table table-borderless">
+                    <tr><th style="width:200px">Rechtsform</th><td>{{ rechtsform_label }}</td></tr>
+                    {% if leg.zweck %}<tr><th>Zweck</th><td>{{ leg.zweck }}</td></tr>{% endif %}
+                    {% if leg.einzugsgebiet %}<tr><th>Einzugsgebiet</th><td>{{ leg.einzugsgebiet }}</td></tr>{% endif %}
+                    <tr><th>Standort</th><td>{% if leg.adresse %}{{ leg.adresse }}, {% endif %}{{ leg.plz }} {{ leg.ort }}, {{ leg.kanton }}</td></tr>
+                    {% if leg.gründungsdatum %}<tr><th>Gründungsdatum</th><td>{{ leg.gründungsdatum.strftime('%d.%m.%Y') }}</td></tr>{% endif %}
+                    {% if leg.anteilschein_betrag %}<tr><th>Anteilschein</th><td>CHF {{ "%.2f"|format(leg.anteilschein_betrag) }}</td></tr>{% endif %}
+                    {% if leg.min_anteilscheine %}<tr><th>Min. Anteilscheine</th><td>{{ leg.min_anteilscheine }}</td></tr>{% endif %}
+                    <tr><th>Aktive Mitglieder</th><td>{{ leg.anzahl_mitglieder() }}</td></tr>
+                    <tr><th>Registrierung</th><td>{% if leg.registrierung_offen %}<span class="text-success">Offen</span>{% else %}<span class="text-danger">Geschlossen</span>{% endif %}</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5>Aktionen</h5>
+                {% if current_user.is_authenticated %}
+                    {% if ist_gründer %}
+                        <a href="{{ url_for('leg.bearbeiten', leg_id=leg.id) }}" class="btn btn-outline-primary w-100 mb-2">
+                            <i class="bi bi-pencil"></i> LEG bearbeiten
+                        </a>
+                        <a href="{{ url_for('members.verwalten', leg_id=leg.id) }}" class="btn btn-outline-primary w-100 mb-2">
+                            <i class="bi bi-people"></i> Mitglieder verwalten
+                        </a>
+                    {% elif ist_mitglied %}
+                        <div class="alert alert-success mb-2">
+                            <i class="bi bi-check-circle"></i> Sie sind Mitglied dieser LEG.
+                        </div>
+                    {% elif mitgliedschaft and mitgliedschaft.status == 'ausstehend' %}
+                        <div class="alert alert-info mb-2">
+                            <i class="bi bi-hourglass-split"></i> Ihr Beitrittsantrag wird bearbeitet.
+                        </div>
+                    {% elif leg.registrierung_offen %}
+                        <a href="{{ url_for('members.beitreten', leg_id=leg.id) }}" class="btn btn-success w-100 mb-2">
+                            <i class="bi bi-person-plus"></i> LEG beitreten
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <p class="text-muted">
+                        <a href="{{ url_for('auth.login') }}">Melden Sie sich an</a>, um dieser LEG beizutreten.
+                    </p>
+                {% endif %}
+                <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-arrow-left"></i> Zurück zur Übersicht
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

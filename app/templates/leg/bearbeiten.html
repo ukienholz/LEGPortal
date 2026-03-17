@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}{{ leg.name }} bearbeiten{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title mb-4"><i class="bi bi-pencil"></i> {{ leg.name }} bearbeiten</h3>
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+
+                    <h5 class="mt-3 mb-3">Grunddaten</h5>
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.beschreibung.label(class="form-label") }}
+                        {{ form.beschreibung(class="form-control", rows=3) }}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.rechtsform.label(class="form-label") }}
+                            {{ form.rechtsform(class="form-select") }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.status.label(class="form-label") }}
+                            {{ form.status(class="form-select") }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.gründungsdatum.label(class="form-label") }}
+                        {{ form.gründungsdatum(class="form-control", type="date") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.zweck.label(class="form-label") }}
+                        {{ form.zweck(class="form-control", rows=2) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.einzugsgebiet.label(class="form-label") }}
+                        {{ form.einzugsgebiet(class="form-control") }}
+                    </div>
+
+                    <h5 class="mt-4 mb-3">Adresse</h5>
+                    <div class="mb-3">
+                        {{ form.adresse.label(class="form-label") }}
+                        {{ form.adresse(class="form-control") }}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            {{ form.plz.label(class="form-label") }}
+                            {{ form.plz(class="form-control") }}
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            {{ form.ort.label(class="form-label") }}
+                            {{ form.ort(class="form-control") }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.kanton.label(class="form-label") }}
+                            {{ form.kanton(class="form-select") }}
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4 mb-3">Anteilscheine</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.anteilschein_betrag.label(class="form-label") }}
+                            {{ form.anteilschein_betrag(class="form-control") }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.min_anteilscheine.label(class="form-label") }}
+                            {{ form.min_anteilscheine(class="form-control") }}
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="form-check">
+                            {{ form.registrierung_offen(class="form-check-input") }}
+                            {{ form.registrierung_offen.label(class="form-check-label") }}
+                        </div>
+                    </div>
+
+                    {{ form.submit(class="btn btn-success btn-lg") }}
+                    <a href="{{ url_for('leg.detail', leg_id=leg.id) }}" class="btn btn-outline-secondary btn-lg ms-2">Abbrechen</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

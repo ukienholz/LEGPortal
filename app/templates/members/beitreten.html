@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{{ leg.name }} beitreten{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title mb-4"><i class="bi bi-person-plus text-success"></i> {{ leg.name }} beitreten</h3>
+
+                <div class="alert alert-info">
+                    <strong>{{ leg.name }}</strong> &mdash; {{ leg.ort }}, {{ leg.kanton }}<br>
+                    Rechtsform: {{ dict(leg.RECHTSFORMEN).get(leg.rechtsform, leg.rechtsform) }}
+                    {% if leg.anteilschein_betrag %}
+                    <br>Anteilschein: CHF {{ "%.2f"|format(leg.anteilschein_betrag) }}
+                    {% if leg.min_anteilscheine and leg.min_anteilscheine > 1 %}
+                    (mindestens {{ leg.min_anteilscheine }} Stück)
+                    {% endif %}
+                    {% endif %}
+                </div>
+
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    {% if leg.anteilschein_betrag %}
+                    <div class="mb-3">
+                        {{ form.anzahl_anteilscheine.label(class="form-label") }}
+                        {{ form.anzahl_anteilscheine(class="form-control") }}
+                        {% for error in form.anzahl_anteilscheine.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                        {% if leg.anteilschein_betrag %}
+                        <div class="form-text">
+                            Betrag pro Anteilschein: CHF {{ "%.2f"|format(leg.anteilschein_betrag) }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    {{ form.submit(class="btn btn-success w-100") }}
+                </form>
+
+                <a href="{{ url_for('leg.detail', leg_id=leg.id) }}" class="btn btn-outline-secondary w-100 mt-2">Abbrechen</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
