@@ -1,3 +1,7 @@
+# Dieses Repo war nur ein Versuch/PoC (kann ich mit Claude, Web-Version, ein LEG-Portal bauen) und ist jetzt obsolet
+
+
+
 # LEG Portal Schweiz
 
 Dieses Portal unterstützt die Gründung und den Betrieb von **Lokalen Energie Gemeinschaften (LEG)** in der Schweiz.
