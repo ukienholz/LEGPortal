@@ -1,4 +1,5 @@
 # Dieses Repo war nur ein Versuch/PoC (kann ich mit Claude, Web-Version, ein LEG-Portal bauen) und ist jetzt obsolet
+Das richtige Portal ist nun das Repo ukienholz/e-portal
 
 
 
